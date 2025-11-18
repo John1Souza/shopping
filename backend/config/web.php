@@ -14,14 +14,18 @@ $config = [
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ],
             'cookieValidationKey' => 'InOAWC7qZpw3AuHiwKrS_L61E6dgWfc1',
+            'enableCsrfValidation' => false
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
             'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'enableSession' => false, // 💥 importante para API
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -42,14 +46,34 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+
+                // -------------------------
+                // USERS
+                // -------------------------
+                'POST user/create'          => 'user/create',
+                'POST user/login'           => 'user/login',
+                'GET user/me'               => 'user/me',
+
+                // -------------------------
+                // SHOPPING LISTS
+                // -------------------------
+                'GET shopping-list'         => 'shopping-list/index',
+                'POST shopping-list'        => 'shopping-list/create',
+                'DELETE shopping-list/<id>' => 'shopping-list/delete',
+
+                // -------------------------
+                // SHOPPING ITEMS
+                // -------------------------
+                'POST shopping-item'        => 'shopping-item/create',
+                'PATCH shopping-item/<id>/toggle' => 'shopping-item/toggle',
+                'DELETE shopping-item/<id>' => 'shopping-item/delete',
             ],
         ],
-        */
+
     ],
     'params' => $params,
 ];
@@ -67,7 +91,7 @@ if (YII_ENV_DEV) {
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        // 'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 }
 

@@ -1,60 +1,85 @@
-# Node
-node_modules/
+# ============================================
+# 🔹 GERAL
+# ============================================
+.DS_Store
+Thumbs.db
 *.log
-
-# Expo / React Native
-.expo/
-.expo-shared/
-
-# Backend (caso use Node)
-backend/node_modules/
+*.tmp
+*.lock
+*.bak
+*.swp
 
 # Ambientes
 .env
 *.env
+.env*.local
 
-# DBeaver
-*.dsworkspace
-
-
-# dependencies
+# Node
 node_modules/
 
-# Expo
+# Typescript build info
+*.tsbuildinfo
+
+# ============================================
+# 🔹 FRONTEND (React Native / Expo)
+# ============================================
 .expo/
+.expo-shared/
 dist/
 web-build/
 expo-env.d.ts
 
-# Native
-.kotlin/
-*.orig.*
+# Metro bundler
+.metro-health-check*
+
+# Android / iOS (gerados pela build nativa)
+android/
+ios/
+*.keystore
 *.jks
 *.p8
 *.p12
 *.key
 *.mobileprovision
 
-# Metro
-.metro-health-check*
+# Kotlin
+.kotlin/
 
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
+# Yarn / NPM
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# macOS
-.DS_Store
-*.pem
+# ============================================
+# 🔹 BACKEND (Yii2 / PHP)
+# ============================================
 
-# local env files
-.env*.local
+# Composer vendor
+backend/vendor/
 
-# typescript
-*.tsbuildinfo
+# Debugger / Cache do Yii
+backend/runtime/
+backend/web/assets/
 
-app-example
+# Arquivos sensíveis do Yii2
+backend/.env
+backend/.env.local
+backend/config/params-local.php
+backend/config/db-local.php
 
-# generated native folders
-/ios
-/android
+# ============================================
+# 🔹 DATABASE / DBEAVER
+# ============================================
+_db/*.sql      # deixe apenas se quiser ignorar dumps
+*.dsworkspace  # arquivos internos do DBeaver
+
+# ============================================
+# 🔹 IDEs (VSCode / JetBrains)
+# ============================================
+.vscode/
+.idea/
+
+# ============================================
+# 🔹 TEMP / OUTROS
+# ============================================
+app-example/

@@ -8,6 +8,7 @@ CREATE TABLE `user` (
   `name` VARCHAR(100) NOT NULL,
   `email` VARCHAR(150) NOT NULL UNIQUE,
   `password_hash` VARCHAR(255) NOT NULL,
+  `auth_key` VARCHAR(255) null,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 );
@@ -32,3 +33,4 @@ CREATE TABLE `shopping_item` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`list_id`) REFERENCES `shopping_list`(`id`)
 );
+

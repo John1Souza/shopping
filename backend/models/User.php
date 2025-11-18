@@ -2,103 +2,80 @@
 
 namespace app\models;
 
-class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
+use Yii;
+
+/**
+ * This is the model class for table "user".
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $password_hash
+ * @property string|null $created_at
+ * @property string|null $auth_key
+ *
+ * @property ShoppingList[] $shoppingLists
+ */
+class User extends \yii\db\ActiveRecord
 {
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
-
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
 
 
     /**
      * {@inheritdoc}
      */
-    public static function findIdentity($id)
+    public static function tableName()
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        return 'user';
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function findIdentityByAccessToken($token, $type = null)
+    public function rules()
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
-
-        return null;
+        return [
+            [['auth_key'], 'default', 'value' => null],
+            [['name', 'email', 'password_hash'], 'required'],
+            [['created_at'], 'safe'],
+            [['name'], 'string', 'max' => 100],
+            [['email'], 'string', 'max' => 150],
+            [['password_hash', 'auth_key'], 'string', 'max' => 255],
+            [['email'], 'unique'],
+        ];
     }
 
     /**
-     * Finds user by username
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => Yii::t('app', 'ID'),
+            'name' => Yii::t('app', 'Name'),
+            'email' => Yii::t('app', 'Email'),
+            'password_hash' => Yii::t('app', 'Password Hash'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'auth_key' => Yii::t('app', 'Auth Key'),
+        ];
+    }
+
+    /**
+     * Gets query for [[ShoppingLists]].
      *
-     * @param string $username
-     * @return static|null
+     * @return \yii\db\ActiveQuery|\app\querys\ShoppingListQuery
      */
-    public static function findByUsername($username)
+    public function getShoppingLists()
     {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
-
-        return null;
+        return $this->hasMany(ShoppingList::className(), ['user_id' => 'id']);
     }
 
     /**
      * {@inheritdoc}
+     * @return \app\querys\UserQuery the active query used by this AR class.
      */
-    public function getId()
+    public static function find()
     {
-        return $this->id;
+        return new \app\querys\UserQuery(get_called_class());
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getAuthKey()
-    {
-        return $this->authKey;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateAuthKey($authKey)
-    {
-        return $this->authKey === $authKey;
-    }
-
-    /**
-     * Validates password
-     *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
-     */
-    public function validatePassword($password)
-    {
-        return $this->password === $password;
-    }
 }
